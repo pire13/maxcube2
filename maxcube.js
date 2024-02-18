@@ -1,7 +1,6 @@
 var MaxCubeLowLevel = require('./maxcube-lowlevel');
 var MaxCubeCommandParser = require('./maxcube-commandparser');
 var MaxCubeCommandFactory = require('./maxcube-commandfactory');
-var Promise = require('bluebird');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 
@@ -131,8 +130,16 @@ util.inherits(MaxCube, EventEmitter);
 
 function waitForCommand (commandType) {
   this.waitForCommandType = commandType;
-  this.waitForCommandResolver = Promise.defer();
-  return this.waitForCommandResolver.promise;
+  var myResolve;
+  var myReject;
+  this.waitForCommandResolver = new Promise((resolve, reject) =>
+    {
+      myresolve = resolve;
+      myreject = reject;
+    });
+  this.waitForCommandResolver.resolve = myresolve;  
+  this.waitForCommandResolver.reject = myreject;  
+  return this.waitForCommandResolver;
 }
 
 function send( command, replyCommandType, timeout=0 ) {

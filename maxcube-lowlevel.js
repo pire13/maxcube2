@@ -1,7 +1,6 @@
 var net = require('net');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var Promise = require('bluebird');
 
 function MaxCubeLowLevel(ip, port){
   this.ip = ip;
